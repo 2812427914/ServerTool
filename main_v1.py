@@ -267,8 +267,9 @@ res = send_servers(access_token_path, record_id_path, get_gpu_path, table_id, gr
 
 if res.status_code == 401:  # 未授权，请检查请求头中的 Authorization 字段是否正确。
     auth(access_token_path)
-elif res.status_code == 404:  # 指定的数据表不存在。
-    res = send_servers(access_token_path, record_id_path,get_gpu_path,table_id, group_name, new_machine=True)
+# elif res.status_code == 404:  # 指定的数据表不存在。
+    # res = send_servers(access_token_path, record_id_path,get_gpu_path,table_id, group_name, new_machine=True)
+    
 res_dict = json.loads(res.text)
 save_to_file(record_id_path, res_dict["id"])
 
