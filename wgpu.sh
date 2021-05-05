@@ -9,32 +9,27 @@
 
 # Part1
 # 这部分负责文件统一，发送数据至数据库，设置服务器定时任务
-cron_freq=3
+cron_freq=1
 main_node=sis16.ustcdm.org
-python_path=~/anaconda3/envs/learn/bin/python             # python_path 需要更改
+python_path=/usr/bin/python3.7           # python_path 需要更改
 new_version=1
 work_path=$(cd `dirname $0`;pwd)
-# work_path=/share/share/ServerTool_zihangt
 gpustat_new_version_path=$work_path'/gpustat_v'$new_version'/'
 # unique_cluster_name=bdaa_edu
+del_Server=(hgzx-work)     # 删除某服务器时必须指定全名，可以在命令行打印 hostname 看看
 
 
 # 设置服务器定时任务
 crontab_l=$(crontab -l)
 if [[ "$crontab_l" != *$cron_freq* ]]
 then
-    cron_command="*/$cron_freq * * * * sh $work_path/wgpu.sh"
+    cron_command="*/$cron_freq * * * * bash $work_path/wgpu.sh"
     echo "$cron_command" > "$work_path/cron"
     crontab "$work_path/cron"
 fi
 
 
-# 删除服务器
-# echo "" > sis16_cron
-# if [[ $hostname == *del_Server* ]]
-# then
-#   crontab sis16_cron
-# fi
+
 
 # 选gpustat_version文件夹中还活跃的机器作为主节点执行 main_version.py
 time_gap=`expr $cron_freq \* 60`
@@ -60,15 +55,11 @@ fi
 
 # tongtong 服务器复制最新的 wgpu.sh 到 /data/share/ServerTool_zihangt/ 文件夹下
 # 发送服务器收集信息到 sis集群目标文件夹下
-if [ "$(hostname)" = "tongtong" ];then
+# if [ "$(hostname)" = "tongtong" ];then
 
-    #tongtong 还需要执行复制 gpustat_version 文件夹内容到 sis集群 gpustat_version 文件夹下的任务
-    # cp /data/share/ServerTool_zihangt/gpustat_v0/* /share/ServerTool_zihangt/gpustat_v0/
-    # cp /data/share/ServerTool_zihangt/gpustat_v1/* /share/ServerTool_zihangt/gpustat_v1/
-
-    # 其实也可以不检测直接复制，可能还更节省资源
-    cp /share/ServerTool_zihangt/wgpu.sh /data/share/ServerTool_zihangt/wgpu.sh
-fi
+#     # 其实也可以不检测直接复制，可能还更节省资源
+#     cp /share/ServerTool_zihangt/wgpu.sh /data/share/ServerTool_zihangt/wgpu.sh
+# fi
 
 
 
@@ -91,3 +82,11 @@ nvidia-smi --query-gpu=name,memory.total,memory.free,memory.used --format=csv,no
 #gpustat --no-color > ~/gpustat/$filename
 # ref: https://nvidia.custhelp.com/app/answers/detail/a_id/3751/~/useful-nvidia-smi-queries
 # echo $name > $work_path'/gpustat/'$filename
+
+
+
+# 删除服务器
+if [[ "${del_Server[@]}"  =~ "$(hostname)" ]]; then
+  echo "" > "$work_path/$(hostname)"'_cron'
+  crontab "$work_path/$(hostname)"'_cron'
+fi

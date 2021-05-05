@@ -192,7 +192,7 @@ def auth(access_token_path):
     param['grant_type'] = "authorization_code"
     access_token = requests.post(access_token_url, json=param, headers=headers)
     token_dict = json.loads(access_token.text)
-    save_to_file('./access_token.txt', token_dict["access_token"])
+    save_to_file(access_token_path, token_dict["access_token"])
 
 def send_servers(access_token_path, record_id_path, get_gpu_path, table_id,group_name, new_machine=False): 
     url = "https://cloud.minapp.com/oserve/v2.4/table/"+str(table_id)+"/record/"
