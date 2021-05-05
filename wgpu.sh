@@ -9,14 +9,13 @@
 
 # Part1
 # 这部分负责文件统一，发送数据至数据库，设置服务器定时任务
-cron_freq=1
-main_node=sis16.ustcdm.org
-python_path=/usr/bin/python3.7           # python_path 需要更改
+cron_freq=3
 new_version=1
+main_node=$(hostname)
+python_path=/usr/bin/python3.7           # python_path 需要更改
 work_path=$(cd `dirname $0`;pwd)
 gpustat_new_version_path=$work_path'/gpustat_v'$new_version'/'
-# unique_cluster_name=bdaa_edu
-del_Server=(hgzx-work)     # 删除某服务器时必须指定全名，可以在命令行打印 hostname 看看
+del_Server=()     # 删除某服务器时必须指定全名，可以在命令行打印 hostname 看看
 
 
 # 设置服务器定时任务
