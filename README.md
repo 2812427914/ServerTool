@@ -16,7 +16,7 @@ cd ServerTool
 ```
 sevral change before project run
 1. get the right python run path 
-2. set the python_path in wgpu.sh file.
+2. set the python_path in ```wgpu.sh``` file.
 ![image](https://user-images.githubusercontent.com/22978342/117116215-aba55f80-adc0-11eb-8a9c-0c2bf2ec39a1.png)
 
 after setting the python_path
