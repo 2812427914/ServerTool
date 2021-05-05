@@ -31,3 +31,7 @@ git fetch --all
 git reset --hard origin/master
 ```
 Then set the python_path again like introduced above.
+
+# later features
+1. Add linux group feature. (one can set the group_name and check the gpus info in the "考研备忘录" according to group_name)
+2. Change the way of setting the python_path to the level of naive
