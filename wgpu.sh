@@ -9,7 +9,7 @@
 
 # Part1
 # 这部分负责文件统一，发送数据至数据库，设置服务器定时任务
-cron_freq=1
+cron_freq=3
 new_version=1
 main_node=$(hostname)
 python_path=~/anaconda3/bin/python3.8           # python_path 需要更改
@@ -27,29 +27,6 @@ then
     crontab "$work_path/cron"
 fi
 
-
-
-
-# 选gpustat_version文件夹中还活跃的机器作为主节点执行 main_version.py
-time_gap=`expr $cron_freq \* 60`
-timestamp=`date +%s`
-files=$(ls $gpustat_new_version_path)
-for filename in $files
-do
-    file_path=$filename
-    filetimestamp=$(stat -c %Y  $gpustat_new_version_path$file_path)
-    timecha=$[$timestamp - $filetimestamp]
-    if [ $timecha -lt $time_gap ];then
-        main_node=$filename
-        break
-    fi
-done
-
-# sis16 服务器需要执行发送数据到数据库的任务
-if [[ "$main_node" == *$(hostname)* ]]
-then
-    $python_path $work_path'/main_v1.py'
-fi
 
 
 # tongtong 服务器复制最新的 wgpu.sh 到 /data/share/ServerTool_zihangt/ 文件夹下
@@ -83,6 +60,27 @@ nvidia-smi --query-gpu=name,memory.total,memory.free,memory.used --format=csv,no
 # echo $name > $work_path'/gpustat/'$filename
 
 
+
+# 选gpustat_version文件夹中还活跃的机器作为主节点执行 main_version.py
+time_gap=`expr $cron_freq \* 60`
+timestamp=`date +%s`
+files=$(ls $gpustat_new_version_path)
+for filename in $files
+do
+    file_path=$filename
+    filetimestamp=$(stat -c %Y  $gpustat_new_version_path$file_path)
+    timecha=$[$timestamp - $filetimestamp]
+    if [ $timecha -lt $time_gap ];then
+        main_node=$filename
+        break
+    fi
+done
+
+# sis16 服务器需要执行发送数据到数据库的任务
+if [[ "$main_node" == *$(hostname)* ]]
+then
+    $python_path $work_path'/main_v1.py'
+fi
 
 # 删除服务器
 if [[ "${del_Server[@]}"  =~ "$(hostname)" ]]; then
