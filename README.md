@@ -14,7 +14,7 @@ git clone https://github.com.cnpmjs.org/2812427914/ServerTool.git
 
 cd ServerTool
 ```
-before project run ``` bash wgpu.sh```
+before run ``` bash wgpu.sh```
 1. set the ```python_path``` in ```wgpu.sh``` . (The python version contains the packages required)
 2. set the ```cron_freq``` in ```wgpu.sh``` .(Optional; the time in crontab tasks, in minutes; default 3 minutes and recommended)
 3. set the ```group_name = "bdaa_edu"``` in ```main_v1.py```.(Later feature; "bdaa_edu" supported only currently)
