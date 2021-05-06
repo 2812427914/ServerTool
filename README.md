@@ -50,6 +50,7 @@ Then set the python_path again like introduced above.
 rm access_token.txt record_id.txt cron ; rm -r gpustat_v1/ __pycache__/
 git add -A
 git commit -m 'fix bugs'
+git pull origin master
 git push -u origin master
 ```
 
