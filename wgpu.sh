@@ -44,13 +44,13 @@ fi
 # common variables 
 filename=$(hostname)'.csv'
 new_file_path=$gpustat_new_version_path$filename
-hostname > $new_file_path
 
 if [ ! -d $gpustat_new_version_path ]; then
     mkdir $gpustat_new_version_path
     chmod 777 $gpustat_new_version_path
 fi
 
+hostname > $new_file_path
 memAvailable=$(cat /proc/meminfo | grep MemAvailable | tr -cd "[0-9]")
 echo $memAvailable >> $new_file_path
 nvidia-smi --query-gpu=name,memory.total,memory.free,memory.used --format=csv,noheader,nounits >> $new_file_path
