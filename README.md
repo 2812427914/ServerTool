@@ -23,8 +23,21 @@ after setting the python_path
 ```
 bash wgpu.sh
 ```
+## python path examples
+sis cluster
+```
+python_path=~/anaconda3/bin/python3.8
+```
+pangpang cluster
+```
+python_path=/usr/bin/python3.6
+```
+huzx cluster
+```
+python_path=/usr/bin/python3.7
+```
 
-# Update changes
+# Update changes from remote branch
 ```
 git clean -f -d
 git fetch --all
