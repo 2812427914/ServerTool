@@ -5,7 +5,6 @@ The tool developed to collect the gpus info of the linux cluster in my lab and d
 2. ram_available
 3. gpu_name, gpu_memory_total, gpu_memory_free, gpu_memory_used
 ```
-# command example (related to the info above)
 hostname
 cat /proc/meminfo | grep MemAvailable | tr -cd "[0-9]"
 nvidia-smi --query-gpu=name,memory.total,memory.free,memory.used --format=csv,noheader,nounits
