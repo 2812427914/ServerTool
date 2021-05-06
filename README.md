@@ -24,7 +24,7 @@ after setting the python_path
 bash wgpu.sh
 ```
 
-# Update changes
+# Update changes from remote branch
 ```
 git clean -f -d
 git fetch --all
