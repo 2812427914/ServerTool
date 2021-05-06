@@ -1,24 +1,26 @@
 #!/bin/bash
 # 这个工具会清除原本的定时任务
-# 修改 wgpu.sh 和 cron 文件只能在 sis集群服务器上进行
-# 修改完之后记得执行
-# cp ./wgpu.sh /share/share/ServerTool_zihangt/wgpu.sh
-# 第一次运行文件同一代码时，等tongtong服务器恢复时，需要手动发送一份 wgpu.sh 到 tongtong 上
 
-# */3 * * * * sh /share/share/ServerTool_zihangt/wgpu.sh
-
-# Part1
-# 这部分负责文件统一，发送数据至数据库，设置服务器定时任务
+# variables
+python_path=~/anaconda3/bin/python3.8           # python_path 需要更改
 cron_freq=3
 new_version=1
 main_node=$(hostname)
-python_path=~/anaconda3/bin/python3.8           # python_path 需要更改
 work_path=$(cd `dirname $0`;pwd)
 gpustat_new_version_path=$work_path'/gpustat_v'$new_version'/'
 del_Server=()     # 删除某服务器时必须指定全名，可以在命令行打印 hostname 看看
+filename=$(hostname)'.csv'
+new_file_path=$gpustat_new_version_path$filename
 
 
 # 设置服务器定时任务
+
+    # 1. 检查 定时任务中的执行频率是否等于 cron_freq
+    # 2. 检查 工作目录下是否有 cron 文件
+    # 执行条件（满足其一即可）：
+    # 1. 不等于
+    # 2. 没有
+
 crontab_l=$(crontab -l)
 if [[ "$crontab_l" != *$cron_freq* ]] || [ ! -f "$work_path/cron" ]
 then
@@ -29,39 +31,23 @@ fi
 
 
 
-# tongtong 服务器复制最新的 wgpu.sh 到 /data/share/ServerTool_zihangt/ 文件夹下
-# 发送服务器收集信息到 sis集群目标文件夹下
-# if [ "$(hostname)" = "tongtong" ];then
+# 创建 gpustat_veresion 文件夹
 
-#     # 其实也可以不检测直接复制，可能还更节省资源
-#     cp /share/ServerTool_zihangt/wgpu.sh /data/share/ServerTool_zihangt/wgpu.sh
-# fi
-
-
-
-# Part 2
-# 这部分是收集服务器信息的代码
-# common variables 
-filename=$(hostname)'.csv'
-new_file_path=$gpustat_new_version_path$filename
+    # 1. 要在运行 main_version.py 文件之前
+    # 2. 要在 选取主节点 之前
 
 if [ ! -d $gpustat_new_version_path ]; then
     mkdir $gpustat_new_version_path
     chmod 777 $gpustat_new_version_path
 fi
 
-hostname > $new_file_path
-memAvailable=$(cat /proc/meminfo | grep MemAvailable | tr -cd "[0-9]")
-echo $memAvailable >> $new_file_path
-nvidia-smi --query-gpu=name,memory.total,memory.free,memory.used --format=csv,noheader,nounits >> $new_file_path
-
-#gpustat --no-color > ~/gpustat/$filename
-# ref: https://nvidia.custhelp.com/app/answers/detail/a_id/3751/~/useful-nvidia-smi-queries
-# echo $name > $work_path'/gpustat/'$filename
 
 
-
-# 选gpustat_version文件夹中还活跃的机器作为主节点执行 main_version.py
+# 选取主节点
+# ``` 
+#    1. 选 gpustat_version 文件夹中还活跃的机器作为主节点执行 main_version.py
+#    2. 活跃标准是在 time_gap 秒内更新过目标文件
+# ```
 time_gap=`expr $cron_freq \* 60`
 timestamp=`date +%s`
 files=$(ls $gpustat_new_version_path)
@@ -76,11 +62,34 @@ do
     fi
 done
 
-# sis16 服务器需要执行发送数据到数据库的任务
-if [[ "$main_node" == *$(hostname)* ]]
+
+# main_node 执行 main_version.py 文件
+# ```
+#     1. 集群中只有主节点会执行 main_version.py 
+#     2. 如果 gpustat_version 文件夹为空则放弃这次执行
+#     3. 执行 main_version.py 要在将数据写入 gpustat_version 文件夹之前
+#         a. 考虑到类似 pangpang 的服务器结果出的慢，所以使用先读后写，而不是先写后读（可能还没写入，读取都已经执行了）
+# ```
+if [[ "$main_node" == *$(hostname)* ]] && [ ${#files[@]} -ne 0 ]
 then
-    $python_path $work_path'/main_v1.py'
+    echo "asf" > asdf.txt
+    $python_path $work_path'/main_v'$new_version'.py'
 fi
+
+
+# 将服务器信息写入 gpustat_version 文件夹
+# ```
+#     有些服务器的执行结果略慢，写入会在 main_version.py 的读取之后，先读后写
+# ```
+hostname > $new_file_path
+memAvailable=$(cat /proc/meminfo | grep MemAvailable | tr -cd "[0-9]")
+echo $memAvailable >> $new_file_path
+nvidia-smi --query-gpu=name,memory.total,memory.free,memory.used --format=csv,noheader,nounits >> $new_file_path
+
+#gpustat --no-color > ~/gpustat/$filename
+# ref: https://nvidia.custhelp.com/app/answers/detail/a_id/3751/~/useful-nvidia-smi-queries
+# echo $name > $work_path'/gpustat/'$filename
+
 
 # 删除服务器
 if [[ "${del_Server[@]}"  =~ "$(hostname)" ]]; then

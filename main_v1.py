@@ -94,7 +94,7 @@ def get_gpus(path = os.getcwd() + "/gpustat", cron_freq=3):
             f = open(path+file)
             modify_time  = os.path.getmtime(path+file)
             current_time = time.time()
-            if modify_time < current_time - 1800 or modify_time > current_time:   # 86400 是 24 个小时的时间戳值，这里只用 30 分钟的 1800
+            if modify_time < current_time - 600 or modify_time > current_time:   # 86400 是 24 个小时的时间戳值，这里只用 10 分钟的 600
                 server_name = f.readline()
                 server = {
                     "hostname" : server_name.replace('\n',''),
