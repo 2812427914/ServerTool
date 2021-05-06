@@ -1,8 +1,25 @@
 # ServerTool
-The tool developed to get the gpus info of the linux cluster in my lab and show them in wechat mini-program "考研备忘录"
+The tool developed to collect the gpus info of the linux cluster in my lab and display them in wechat mini-program "考研备忘录"
+## Info collected 
+1. hostname
+2. ram_available
+3. gpu_name, gpu_memory_total, gpu_memory_free, gpu_memory_used
+```
+# command example (related to the info above)
+hostname
+cat /proc/meminfo | grep MemAvailable | tr -cd "[0-9]"
+nvidia-smi --query-gpu=name,memory.total,memory.free,memory.used --format=csv,noheader,nounits
+```
+The info listed above are collected using the project.  
+Check ref: https://nvidia.custhelp.com/app/answers/detail/a_id/3751/~/useful-nvidia-smi-queries For more information of ```nvidia-smi``` 
+## Info displayed
+1. hostname
+2. ram_available
+3. gpu_name, gpu_memory_total, gpu_memory_free, gpu_memory_used  
 
-# package requirements
-numpy,
+The info listed above are displayed in mini-program "考研备忘录", which is not an open-source project yet.
+# Package requirements
+numpy  
 requests
 
 # Setup And Run
@@ -22,9 +39,9 @@ before run ``` bash wgpu.sh```
 bash wgpu.sh
 ```
 ## python path examples
-1. sis cluster ```python_path=~/anaconda3/bin/python3.8```
-2. pangpang cluster```python_path=/usr/bin/python3.6```
-3. huzx cluster```python_path=/usr/bin/python3.7```
+sis cluster ```python_path=~/anaconda3/bin/python3.8```  
+pangpang cluster```python_path=/usr/bin/python3.6```  
+huzx cluster```python_path=/usr/bin/python3.7```  
 # Update changes from remote branch
 ```
 git clean -f -d
@@ -32,7 +49,7 @@ git fetch --all
 git reset --hard origin/master
 ```
 Then do not forget to:
-1. set the ```python_path``` in ```wgpu.sh``` . 
+1. set the ```python_path``` in ```wgpu.sh```(!!!). 
 2. set the ```cron_freq``` in ```wgpu.sh``` .
 3. set the ```group_name``` in ```main_v1.py```.
 
