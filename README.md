@@ -32,6 +32,14 @@ git reset --hard origin/master
 ```
 Then set the python_path again like introduced above.
 
+# Delete extra files and  git push to make contributions
+``` 
+rm access_token.txt record_id.txt cron ; rm -r gpustat_v1/ __pycache__/
+git add -A
+git commit -m 'fix bugs'
+git push -u origin master
+```
+
 # later features
 1. Add linux group feature. (one can set the group_name and check the gpus info in the "考研备忘录" according to group_name)
 2. Change the way of setting the python_path to the level of naive

@@ -38,6 +38,7 @@ fi
 
 if [ ! -d $gpustat_new_version_path ]; then
     mkdir $gpustat_new_version_path
+    touch $new_file_path
     chmod 777 $gpustat_new_version_path
 fi
 
@@ -48,7 +49,7 @@ fi
 #    1. 选 gpustat_version 文件夹中还活跃的机器作为主节点执行 main_version.py
 #    2. 活跃标准是在 time_gap 秒内更新过目标文件
 # ```
-time_gap=`expr $cron_freq \* 60`
+time_gap=`expr $cron_freq \* 65`
 timestamp=`date +%s`
 files=$(ls $gpustat_new_version_path)
 for filename in $files
@@ -56,9 +57,9 @@ do
     file_path=$filename
     filetimestamp=$(stat -c %Y  $gpustat_new_version_path$file_path)
     timecha=$[$timestamp - $filetimestamp]
-    if [ $timecha -lt $time_gap ];then
+    if [ $timecha -lt $time_gap ];then 
         main_node=$filename
-        break
+        break 
     fi
 done
 
@@ -70,9 +71,9 @@ done
 #     3. 执行 main_version.py 要在将数据写入 gpustat_version 文件夹之前
 #         a. 考虑到类似 pangpang 的服务器结果出的慢，所以使用先读后写，而不是先写后读（可能还没写入，读取都已经执行了）
 # ```
-if [[ "$main_node" == *$(hostname)* ]] && [ ${#files[@]} -ne 0 ]
+
+if [[ "$main_node" == *$(hostname)* ]]
 then
-    echo "asf" > asdf.txt
     $python_path $work_path'/main_v'$new_version'.py'
 fi
 

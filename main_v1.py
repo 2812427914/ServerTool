@@ -103,16 +103,18 @@ def get_gpus(path = os.getcwd() + "/gpustat", cron_freq=3):
                     "gpus" : [],
                     "update_rate": cron_freq,
                 }
+                servers.append(server)
             else:
                 server_data = f.read().splitlines()
-                server = {
-                    "stat": "normal",
-                    "hostname": server_data[0],
-                    "ram_available": server_data[1],
-                    "gpus" : [ gpu.split(',') for gpu in server_data[2:]],
-                    "update_rate": cron_freq,
-                }
-            servers.append(server)
+                if len(server_data) != 0 :
+                    server = {
+                        "stat": "normal",
+                        "hostname": server_data[0],
+                        "ram_available": server_data[1],
+                        "gpus" : [ gpu.split(',') for gpu in server_data[2:]],
+                        "update_rate": cron_freq,
+                    }
+                    servers.append(server)
     return servers
 
 
