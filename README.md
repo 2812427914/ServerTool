@@ -10,8 +10,9 @@ hostname
 cat /proc/meminfo | grep MemAvailable | tr -cd "[0-9]"
 nvidia-smi --query-gpu=name,memory.total,memory.free,memory.used --format=csv,noheader,nounits
 ```
-The info listed above are collected using the project.  
-Check ref: https://nvidia.custhelp.com/app/answers/detail/a_id/3751/~/useful-nvidia-smi-queries For more information of ```nvidia-smi``` 
+The info listed above are collected using the project.   
+Check the code for more details  
+About [nvidia-smi](https://nvidia.custhelp.com/app/answers/detail/a_id/3751/~/useful-nvidia-smi-queries)
 ## Info displayed
 1. hostname
 2. ram_available
@@ -27,7 +28,7 @@ requests
 git clone https://github.com/2812427914/ServerTool.git
 or
 git clone https://github.com.cnpmjs.org/2812427914/ServerTool.git
-(faster)
+(faster, mirror)
 
 cd ServerTool
 ```
@@ -38,7 +39,7 @@ before run ``` bash wgpu.sh```
 ```
 bash wgpu.sh
 ```
-## python path examples
+## Python path examples
 sis cluster ```python_path=~/anaconda3/bin/python3.8```  
 pangpang cluster```python_path=/usr/bin/python3.6```  
 huzx cluster```python_path=/usr/bin/python3.7```  
@@ -61,7 +62,7 @@ git commit -m 'fix bugs'
 git pull origin master
 git push -u origin master
 ```
-# later features
+# Later features
 1. Add linux group feature. (one can set the group_name and check the gpus info in the "考研备忘录" according to group_name)
 2. Change the way of setting the python_path to the level of naive
 3. Support setting the variables (cron_freq, alive_servers) of a linux cluster through logining in one of the them.
