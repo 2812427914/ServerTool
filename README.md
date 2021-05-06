@@ -5,7 +5,7 @@ The tool developed to get the gpus info of the linux cluster in my lab and show 
 numpy,
 requests
 
-# Setup
+# Setup And Run
 ```
 git clone https://github.com/2812427914/ServerTool.git
 or
@@ -14,36 +14,27 @@ git clone https://github.com.cnpmjs.org/2812427914/ServerTool.git
 
 cd ServerTool
 ```
-sevral change before project run
-1. get the right python run path 
-2. set the python_path in ```wgpu.sh``` file.
-![image](https://user-images.githubusercontent.com/22978342/117116215-aba55f80-adc0-11eb-8a9c-0c2bf2ec39a1.png)
-
-after setting the python_path
+before project run ``` bash wgpu.sh```
+1. set the ```python_path``` in ```wgpu.sh``` . (The python version contains the packages required)
+2. set the ```cron_freq``` in ```wgpu.sh``` .(Optional; the time in crontab tasks, in minutes; default 3 minutes and recommended)
+3. set the ```group_name = "bdaa_edu"``` in ```main_v1.py```.(Later feature; "bdaa_edu" supported only currently)
 ```
 bash wgpu.sh
 ```
 ## python path examples
-sis cluster
-```
-python_path=~/anaconda3/bin/python3.8
-```
-pangpang cluster
-```
-python_path=/usr/bin/python3.6
-```
-huzx cluster
-```
-python_path=/usr/bin/python3.7
-```
-
+1. sis cluster ```python_path=~/anaconda3/bin/python3.8```
+2. pangpang cluster```python_path=/usr/bin/python3.6```
+3. huzx cluster```python_path=/usr/bin/python3.7```
 # Update changes from remote branch
 ```
 git clean -f -d
 git fetch --all
 git reset --hard origin/master
 ```
-Then set the python_path again like introduced above.
+Then do not forget to:
+1. set the ```python_path``` in ```wgpu.sh``` . 
+2. set the ```cron_freq``` in ```wgpu.sh``` .
+3. set the ```group_name``` in ```main_v1.py```.
 
 # Delete extra files and  git push to make contributions
 ``` 
@@ -53,7 +44,6 @@ git commit -m 'fix bugs'
 git pull origin master
 git push -u origin master
 ```
-
 # later features
 1. Add linux group feature. (one can set the group_name and check the gpus info in the "考研备忘录" according to group_name)
 2. Change the way of setting the python_path to the level of naive
