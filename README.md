@@ -39,7 +39,7 @@ before run ``` bash wgpu.sh```
 bash wgpu.sh
 ```
 ## Python path examples
-sis cluster ```python_path=~/anaconda3/bin/python3.8```  
+sis cluster ```python_path=~/anaconda3/envs/learn/bin/python3.6```  
 pangpang cluster```python_path=/usr/bin/python3.6```  
 huzx cluster```python_path=/usr/bin/python3.7```  
 # Update changes from remote branch
